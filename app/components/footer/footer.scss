@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.container {
+    @apply mx-auto max-w-[1202px] px-3;
+  }
+
+.footer {
+    h6 {
+      @apply mb-4 font-sans font-semibold lg:mb-8;
+    }
+  
+    p {
+      @apply text-sm;
+    }
+  
+    li > a {
+      @apply text-sm hover:text-black hover:underline;
+    }
+  }
