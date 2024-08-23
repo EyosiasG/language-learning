@@ -4,6 +4,11 @@ import { UserButton } from "@clerk/nextjs";
 import { AiOutlineRead } from "react-icons/ai";
 import { BsQuestionSquare } from "react-icons/bs";
 import { LuPencilLine } from "react-icons/lu";
+import { useUser } from "@clerk/nextjs";
+import { useEffect } from "react";
+import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
+import { connectToDB } from "../../lib/mongodb/mongoose";
 
 const variants = {
   hidden: { opacity: 0 },
@@ -20,6 +25,33 @@ const variants = {
 }
 
 export default function Home() {
+  const {user} = useUser();
+  const { isLoaded, userId, sessionId, getToken } = useAuth()
+
+  const [userData, setUserData] = useState({});
+
+  const getUserData = async () => {
+    if (user && user.id) {
+      try {
+        const response = await fetch(`/api/user/${userId}`);
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Error fetching user data:', errorData.message);
+          return;
+        }
+        const data = await response.json();
+        console.log("user: ", data);
+      } catch (error) {
+        console.error('Unexpected error:', error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    console.log("userID:", userId)
+    getUserData();
+  },[user])
+
   return (
     <motion.div
       variants={variants}
@@ -35,6 +67,7 @@ export default function Home() {
       <FeaturesSection />
       <Testimonials />
       <JoinUs />
+      <UserButton />
 
     </motion.div>
   );
